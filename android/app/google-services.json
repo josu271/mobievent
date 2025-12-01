@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "785381858485",
+    "project_id": "unidad-2c48d",
+    "storage_bucket": "unidad-2c48d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:785381858485:android:95dae8660fc946646472fc",
+        "android_client_info": {
+          "package_name": "com.example.mobievent"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCxJ-8PYpcBZx7W96zNM9AmCvCEjIPk7cs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
