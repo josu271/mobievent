@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobievent/screens/cliente/mapa_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import '../../services/reserva_service.dart';
@@ -274,27 +275,30 @@ class _DetallesReservaSheetState extends State<DetallesReservaSheet> {
           
           // Boton para calcular distancia
           ElevatedButton.icon(
-            onPressed: _direccionEntrega.isEmpty 
-                ? null
-                : () async {
-                    setState(() => _calculandoTransporte = true);
-                    // Simular calculo de distancia
-                    await Future.delayed(Duration(seconds: 1));
-                    setState(() {
-                      _distanciaKm = 15.5;
-                      _costoTransporte = _distanciaKm * 10; // Tarifa base
-                      _calculandoTransporte = false;
-                    });
-                  },
-            icon: _calculandoTransporte 
-                ? CircularProgressIndicator(color: Colors.white, strokeWidth: 2)
-                : Icon(Icons.map),
-            label: Text('Calcular distancia y transporte'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Color(0xFF2E7D32),
-              minimumSize: Size(double.infinity, 50),
-            ),
-          ),
+            onPressed: () async {
+              final result = await Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => MapaScreen(
+          onUbicacionSeleccionada: (distancia, direccion) {
+            setState(() {
+              _distanciaKm = distancia;
+              _direccionEntrega = direccion;
+              // Calcular costo de transporte usando el servicio
+              _costoTransporte = distancia * 10; // Puedes usar tu lógica de cálculo
+            });
+          },
+        ),
+      ),
+    );
+  },
+  icon: Icon(Icons.map),
+  label: Text('Seleccionar ubicacion en mapa'),
+  style: ElevatedButton.styleFrom(
+    backgroundColor: Color(0xFF2E7D32),
+    minimumSize: Size(double.infinity, 50),
+  ),
+),
           
           if (_distanciaKm > 0) ...[
             SizedBox(height: 16),

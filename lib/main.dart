@@ -7,6 +7,7 @@ import 'auth/auth_service.dart';
 import 'services/reserva_service.dart';
 import 'screens/cliente/inicio_cliente.dart';
 import 'screens/empleado/inicio_empleado.dart';
+import 'services/geolocation_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,6 +22,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => AuthService()),
         Provider<ReservaService>(create: (_) => ReservaService()),
+        Provider<GeoLocationService>(create: (_) => GeoLocationService()),
         Provider(create: (_) => FirebaseFirestore.instance),
       ],
       child: MaterialApp(

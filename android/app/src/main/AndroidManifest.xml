@@ -11,6 +11,11 @@
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
 
+        <!-- Aquí va la API KEY (DENTRO del application) -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBIZrptkE0IGakPhzMzMpq4PaW_gw_D1vk"/>
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -38,11 +43,6 @@
             android:name="flutterEmbedding"
             android:value="2" />
     </application>
-
-    <!-- API KEY REAL de Google Maps -->
-    <meta-data
-        android:name="com.google.android.geo.API_KEY"
-        android:value="AIzaSyBIZrptkEOIGakPhzMzMpq4PaW_gw_D1vk"/>
 
     <!-- Required for Flutter text processing -->
     <queries>
