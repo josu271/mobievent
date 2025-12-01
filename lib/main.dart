@@ -1,79 +1,79 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:provider/provider.dart';
+import 'services/firestore_service.dart';
+import 'screens/client/inventory_screen.dart';
+import 'screens/client/transport_screen.dart';
+import 'screens/admin/pricing_screen.dart';
+import 'screens/employee/warehouse_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(); // Inicialización de Firebase
-  runApp(const MyApp());
+  await Firebase.initializeApp();
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: ProductosScreen(),
+    return MultiProvider(
+      providers: [
+        Provider<FirestoreService>(create: (_) => FirestoreService()),
+      ],
+      child: MaterialApp(
+        title: 'MobiEvent - Alquiler Mobiliario',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+        ),
+        initialRoute: '/',
+        routes: {
+          '/': (context) => HomeScreen(),
+          '/inventory': (context) => InventoryScreen(),
+          '/transport': (context) => TransportScreen(),
+          '/pricing': (context) => PricingScreen(),
+          '/warehouse': (context) => WarehouseScreen(),
+        },
+      ),
     );
   }
 }
 
-class ProductosScreen extends StatefulWidget {
-  const ProductosScreen({super.key});
-
-  @override
-  State<ProductosScreen> createState() => _ProductosScreenState();
-}
-
-class _ProductosScreenState extends State<ProductosScreen> {
-  List<Map<String, dynamic>> productos = [];
-
-  @override
-  void initState() {
-    super.initState();
-    obtenerProductos();
-  }
-
-  Future<void> obtenerProductos() async {
-    try {
-      final snapshot = await FirebaseFirestore.instance
-          .collection('productos')
-          .get();
-
-      setState(() {
-        productos = snapshot.docs.map((doc) {
-          return {
-            'id': doc.id,
-            ...doc.data(),
-          };
-        }).toList();
-      });
-    } catch (e) {
-      print('Error al obtener productos: $e');
-    }
-  }
-
+class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Lista de Productos')),
-      body: productos.isEmpty
-          ? const Center(child: CircularProgressIndicator())
-          : ListView.builder(
-              itemCount: productos.length,
-              itemBuilder: (context, index) {
-                final producto = productos[index];
-
-                return ListTile(
-                  title: Text(producto['nombre'] ?? 'Sin nombre'),
-                  subtitle:
-                      Text('Precio: S/ ${producto['precio'] ?? '0.00'}'),
-                  trailing: Text(producto['id']),
-                );
-              },
+      appBar: AppBar(title: Text('MobiEvent')),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: () => Navigator.pushNamed(context, '/inventory'),
+              child: Text('Ver Inventario (Cliente)'),
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+              ),
             ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () => Navigator.pushNamed(context, '/warehouse'),
+              child: Text('Panel Almacén (Empleado)'),
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+              ),
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () => Navigator.pushNamed(context, '/pricing'),
+              child: Text('Configurar Tarifas (Admin)'),
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
